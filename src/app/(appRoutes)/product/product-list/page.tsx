@@ -1,10 +1,8 @@
 "use client";
 
 import { DataTable } from "@/components/DataTable";
-import { columns } from "./columns";
+import { columns, TProductList } from "./columns";
 import HeaderActionLinkBtn from "@/components/HeaderActionLinkBtn";
-import useProductList from "@/hooks/useProductList";
-import Loading from "@/components/Loading";
 
 export default function ProductList() {
   const products: TProductList[] = [

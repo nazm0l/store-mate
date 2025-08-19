@@ -38,7 +38,7 @@ import Loading from "../Loading";
 import { removeUserInfo } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { categories } from "@/app/(appRoutes)/product/category/page";
+import { categories } from "@/constants/constants";
 
 const formSchema = z.object({
   productType: z.string(),
