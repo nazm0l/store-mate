@@ -1,4 +1,3 @@
-
 import { HeaderAddCategoryDialog } from "./HeaderAddCategoryDialog";
 import { Button } from "./ui/button";
 import { Plus } from "lucide-react";

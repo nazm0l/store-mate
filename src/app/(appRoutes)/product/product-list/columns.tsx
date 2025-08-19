@@ -16,7 +16,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-export type ProductList = {
+export type TProductList = {
   id: string;
   image: string;
   productName: string;
@@ -29,7 +29,7 @@ export type ProductList = {
   cost: number;
 };
 
-export const columns: ColumnDef<ProductList>[] = [
+export const columns: ColumnDef<TProductList>[] = [
   {
     id: "select",
     header: ({ table }) => (

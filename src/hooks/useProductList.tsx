@@ -1,10 +1,10 @@
-import { ProductList } from "@/app/(appRoutes)/product/product-list/columns";
+import { TProductList } from "@/app/(appRoutes)/product/product-list/columns";
 import { removeUserInfo } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const useProductList = () => {
-  const [products, setProducts] = useState<ProductList[]>([]);
+  const [products, setProducts] = useState<TProductList[]>([]);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 

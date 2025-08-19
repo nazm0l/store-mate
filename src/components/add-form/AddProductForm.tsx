@@ -38,6 +38,7 @@ import Loading from "../Loading";
 import { removeUserInfo } from "@/services/auth.service";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { categories } from "@/app/(appRoutes)/product/category/page";
 
 const formSchema = z.object({
   productType: z.string(),
@@ -75,13 +76,8 @@ const formSchema = z.object({
 });
 
 export default function AddProductForm({ sku }: { sku: string }) {
-  const [category, setCategory] = useState([]);
-  const [brands, setBrands] = useState([]);
-  const [productUnit, setProductUnit] = useState([]);
-  const [warehouses, setWarehouses] = useState([]);
   const [quantity, setQuantity] = useState<any>([]);
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -116,141 +112,53 @@ export default function AddProductForm({ sku }: { sku: string }) {
 
   const categoryId = form.watch("category");
 
-  //Get category
-  async function getCategory() {
-    setLoading(true);
-    const accessToken = localStorage.getItem("accessToken");
-    try {
-      const res = await fetch(
-        "https://storemate-api-dev.azurewebsites.net/api/Category/pull",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-            ApiKey: "c12c49a4-66b8-499f-9d30-4cfb907f7270",
-          },
-          body: JSON.stringify({
-            skip: 0,
-            take: 20,
-          }),
-        }
-      );
-
-      if (res.status === 401) {
-        removeUserInfo();
-        router.push("/");
-      }
-
-      if (res.status === 400) {
-        alert("Something went wrong");
-      }
-
-      const data = await res.json();
-      setCategory(data);
-      setLoading(false);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   //Get brand
-  async function getBrand(categoryId: string) {
-    const accessToken = localStorage.getItem("accessToken");
-    try {
-      const res = await fetch(
-        `https://storemate-api-dev.azurewebsites.net/api/Brand/${categoryId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-            ApiKey: "c12c49a4-66b8-499f-9d30-4cfb907f7270",
-          },
-        }
-      );
-
-      if (res.status === 401) {
-        removeUserInfo();
-        router.push("/");
-      }
-
-      if (res.status === 400) {
-        alert("Something went wrong");
-      }
-
-      const data = await res.json();
-      console.log(data);
-
-      setBrands(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const brands = [
+    {
+      id: "1",
+      brandName: "Brand 1",
+    },
+    {
+      id: "2",
+      brandName: "Brand 2",
+    },
+    {
+      id: "3",
+      brandName: "Brand 3",
+    },
+  ];
 
   //Get product unit
-  async function getProductUnit() {
-    const accessToken = localStorage.getItem("accessToken");
-    try {
-      const res = await fetch(
-        "https://storemate-api-dev.azurewebsites.net/api/StoreUnit/pull",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-            ApiKey: "c12c49a4-66b8-499f-9d30-4cfb907f7270",
-          },
-          body: JSON.stringify({
-            skip: 0,
-            take: 20,
-          }),
-        }
-      );
-      const data = await res.json();
-      setProductUnit(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const productUnit = [
+    {
+      id: "1",
+      name: "Unit 1",
+    },
+    {
+      id: "2",
+      name: "Unit 2",
+    },
+    {
+      id: "3",
+      name: "Unit 3",
+    },
+  ];
 
   //Get warehouse
-  async function getWarehouse() {
-    const accessToken = localStorage.getItem("accessToken");
-    try {
-      const res = await fetch(
-        "https://storemate-api-dev.azurewebsites.net/api/WareHouse/pull",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-            ApiKey: "c12c49a4-66b8-499f-9d30-4cfb907f7270",
-          },
-          body: JSON.stringify({
-            skip: 0,
-            take: 20,
-          }),
-        }
-      );
-      const data = await res.json();
-      setWarehouses(data);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  useEffect(() => {
-    getCategory();
-    getProductUnit();
-    getWarehouse();
-  }, []);
-
-  useEffect(() => {
-    if (categoryId) {
-      getBrand(categoryId);
-    }
-  }, [categoryId]);
+  const warehouses = [
+    {
+      id: "1",
+      name: "Warehouse 1",
+    },
+    {
+      id: "2",
+      name: "Warehouse 2",
+    },
+    {
+      id: "3",
+      name: "Warehouse 3",
+    },
+  ];
 
   const handleQuantity = (e: any) => {
     setQuantity((prev: any) => [
@@ -264,75 +172,7 @@ export default function AddProductForm({ sku }: { sku: string }) {
     ]);
   };
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      const accessToken = localStorage.getItem("accessToken");
-
-      const res = await fetch(
-        "https://storemate-api-dev.azurewebsites.net/api/Product/push",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-            ApiKey: "c12c49a4-66b8-499f-9d30-4cfb907f7270",
-          },
-          body: JSON.stringify(values),
-        }
-      );
-
-      const data = await res.json();
-      console.log(data);
-
-      if (res.status === 401) {
-        removeUserInfo();
-        router.push("/");
-      }
-
-      if (data?.isSuccessful === false) {
-        toast.error(data?.message);
-      }
-
-      //Push quantity to warehouse
-      if (data?.isSuccessful === true) {
-        const quantityData = quantity.map((item: any) => {
-          return {
-            productId: data?.model.id,
-            warehouseId: item.warehouseId,
-            quantity: item.quantity,
-          };
-        });
-
-        const pushQuantity = await fetch(
-          "https://storemate-api-dev.azurewebsites.net/api/ProductWareHouse/push",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-              ApiKey: "c12c49a4-66b8-499f-9d30-4cfb907f7270",
-            },
-            body: JSON.stringify(quantityData),
-          }
-        );
-
-        if (pushQuantity.status === 401) {
-          removeUserInfo();
-          router.push("/");
-        }
-
-        if (!pushQuantity.ok) {
-          toast.error("Something went wrong");
-        }
-
-        if (pushQuantity.status === 200) {
-          toast.success("Product added successfully");
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  async function onSubmit(values: z.infer<typeof formSchema>) {}
 
   return (
     <>
@@ -429,7 +269,7 @@ export default function AddProductForm({ sku }: { sku: string }) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {category.map((category: any) => (
+                          {categories.map((category: any) => (
                             <SelectItem key={category.id} value={category.id}>
                               {category.categoryName}
                             </SelectItem>
